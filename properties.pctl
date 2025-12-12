@@ -1,0 +1,2 @@
+// Safety property: bid price always less than ask price
+P>=1 [ G (bid_price < ask_price) ]
