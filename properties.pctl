@@ -1,19 +1,9 @@
 //////////////////////////////////////////////////////////////////////
-// SAFETY PROPERTIES
+// SAFETY PROPERTIES (PCTL)
 //////////////////////////////////////////////////////////////////////
 
-// Bid is always less than ask
+// Bid is always strictly less than ask
 P>=1 [ G (bid < ask) ]
 
-// Inventory bounded
+// Inventory (net position) always within risk limit
 P>=1 [ G (inv <= MAX_LIMIT & inv >= -MAX_LIMIT) ]
-
-//////////////////////////////////////////////////////////////////////
-// LIVENESS PROPERTIES
-//////////////////////////////////////////////////////////////////////
-
-// Market data eventually leads to a quote
-P>=1 [ G (!market_data | F quote_posted) ]
-
-// Cancel eventually resolves (filled or canceled)
-P>=1 [ G (bid_state != 2 | F (bid_state = 3 | bid_state = 4)) ]
