@@ -12,3 +12,8 @@ P>=1 [ G (inv <= MAX_LIMIT & inv >= -MAX_LIMIT) ]
 // LIVENESS PROPERTIES
 //////////////////////////////////////////////////////////////////////
 
+// Market data eventually leads to a quote
+P>=1 [ G (!market_data | F quote_posted) ]
+
+// Cancel eventually resolves (filled or canceled)
+P>=1 [ G (bid_state != 2 | F (bid_state = 3 | bid_state = 4)) ]
