@@ -1,0 +1,9 @@
+//////////////////////////////////////////////////////////////////////
+// LIVENESS PROPERTIES (LTL)
+//////////////////////////////////////////////////////////////////////
+
+// Whenever market data is received, a quote is eventually posted
+G (market_data -> F quote_posted)
+
+// If a cancel is sent, it is eventually filled or canceled
+G (bid_state = 2 -> F (bid_state = 3 | bid_state = 4))
