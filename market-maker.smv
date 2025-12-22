@@ -1,103 +1,115 @@
 MODULE main
 
 VAR
-  -- Market state
-  mid : 1..3;          -- abstract mid price
+  -- Market
+  Mid : 0..200;
 
-  -- Inventory and risk limit
-  inventory : 0..5;
-  maxLimit  : 0..5;
+  -- Quotes
+  Bid : 0..200;
+  Ask : 0..200;
 
-  -- Control / events
-  marketDataReceived : boolean;
-  quotePosted        : boolean;
-  cancelSent         : boolean;
-  orderLive          : boolean;
-  filled             : boolean;
-  cancelConfirmed    : boolean;
+  -- Inventory
+  Inv : -10000..10000;
+
+  -- Bid order state
+  Bid_state : {NONE, ACTIVE, CANCEL_SENT, FILLED, CANCELED};
+
+  -- Signals
+  Market_data  : boolean;
+  Quote_posted : boolean;
+
+  -- Liveness obligations
+  Pending_quote  : boolean;
+  Pending_cancel : boolean;
 
 DEFINE
-  -- Derived prices from mid
-  bid := mid - 1;  -- in {0,1,2}
-  ask := mid + 1;  -- in {2,3,4}
+  -- Checks if we can post a quote (used to fix quote cancellation issues)
+  Can_post_quote := Market_data & !(Bid_state = CANCEL_SENT);
 
 ASSIGN
-  --------------------
-  -- Initial conditions
-  --------------------
-  init(mid) := 2;
-  init(inventory) := 0;
-  init(maxLimit)  := 3;
+  -- Initial state
+  init(Mid) := 100;
+  init(Bid) := 99;
+  init(Ask) := 101;
+  init(Inv) := 0;
 
-  init(marketDataReceived) := FALSE;
-  init(quotePosted)        := FALSE;
-  init(cancelSent)         := FALSE;
-  init(orderLive)          := FALSE;
-  init(filled)             := FALSE;
-  init(cancelConfirmed)    := FALSE;
+  init(Bid_state) := NONE;
 
-  --------------------
-  -- Risk limit: constant
-  --------------------
-  next(maxLimit) := maxLimit;
+  init(Market_data) := FALSE;
+  init(Quote_posted) := FALSE;
 
-  --------------------
-  -- Environment events
-  --------------------
+  init(Pending_quote) := FALSE;
+  init(Pending_cancel) := FALSE;
 
-  -- Market data: nondeterministic each step
-  next(marketDataReceived) := {TRUE, FALSE};
-
-  -- Cancels: can only be sent while an order is live
-  next(cancelSent) := case
-    orderLive : {TRUE, FALSE};  -- can choose to send a cancel
-    TRUE      : FALSE;          -- no point canceling if nothing is live
+  -- Mid evolution
+  next(Mid) := case
+    Mid = 0   : {0, 1};
+    Mid = 200 : {199, 200};
+    TRUE      : {Mid - 1, Mid, Mid + 1};
   esac;
 
-  --------------------
-  -- Midprice evolution
-  --------------------
-  next(mid) := case
-    marketDataReceived : {1, 2, 3};  -- jump to any allowed mid
-    TRUE               : mid;
+  -- Market data arrives
+  next(Market_data) := case
+    Quote_posted : FALSE;           -- posting consumes data
+    Market_data  : TRUE;            -- latch: once true, stays true until consumed
+    TRUE         : {TRUE, FALSE};   -- new data may arrive
   esac;
 
-  --------------------
-  -- Quote posting logic
-  --------------------
-  next(quotePosted) := case
-    marketDataReceived : TRUE;          -- post quote on new data
-    TRUE               : quotePosted;
+  -- Quote posting
+  next(Quote_posted) := case
+    Can_post_quote : TRUE;
+    TRUE           : FALSE;
   esac;
 
-  --------------------
-  -- Order live state
-  --------------------
-  next(orderLive) := case
-    marketDataReceived         : TRUE;    -- new order when we quote
-    (filled | cancelConfirmed) : FALSE;   -- order no longer live
-    TRUE                       : orderLive;
+  -- Pending_quote obligation
+  next(Pending_quote) := next(Market_data);
+
+  -- Update quotes when we post them
+  next(Bid) := case
+    Quote_posted & Mid = 0 : 0;
+    Quote_posted          : Mid - 1;
+    TRUE                  : Bid;
   esac;
 
-  --------------------
-  -- Fill / cancel confirmation behavior
-  --------------------
-  next(filled) := case
-    cancelSent & orderLive : TRUE;     -- strong assumption: cancel → some resolution
-    TRUE                   : filled;
+  next(Ask) := case
+    Quote_posted & Mid = 200 : 200;
+    Quote_posted            : Mid + 1;
+    TRUE                    : Ask;
   esac;
 
-  next(cancelConfirmed) := case
-    cancelSent & orderLive : TRUE;
-    TRUE                   : cancelConfirmed;
+  -- Our Bid order state machine
+  next(Bid_state) := case
+    -- Cancel resolves immediately
+    Bid_state = CANCEL_SENT : {FILLED, CANCELED};
+
+    -- Posting a quote creates/refreshes an active order
+    Quote_posted : ACTIVE;
+
+    -- Active order may stay active or send cancel
+    Bid_state = ACTIVE : {ACTIVE, CANCEL_SENT};
+
+    -- Terminal states recycle
+    Bid_state = FILLED   : NONE;
+    Bid_state = CANCELED : NONE;
+
+    TRUE : Bid_state;
   esac;
 
-  --------------------
-  -- Inventory update
-  --------------------
-  next(inventory) := case
-    filled & inventory < maxLimit : inventory + 1;
-    TRUE                          : inventory;
+  -- Pending_cancel obligation: true exactly when cancel is in flight
+  next(Pending_cancel) := (next(Bid_state) = CANCEL_SENT);
+
+  -- Inventory update on fill
+  next(Inv) := case
+    (Bid_state = CANCEL_SENT) & (next(Bid_state) = FILLED) & (Inv < 10000) : Inv + 1;
+    TRUE : Inv;
   esac;
 
+-- Specs
+LTLSPEC
+  G (Pending_quote -> F Quote_posted);
 
+LTLSPEC
+  G (Pending_cancel -> F (Bid_state = FILLED | Bid_state = CANCELED));
+
+LTLSPEC
+  G (Quote_posted -> (Bid < Ask));
