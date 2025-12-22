@@ -61,3 +61,5 @@ All of the liveness and safety properties can be verified using the following co
 
 ### Good PRISM Model
 The correct abstract model can be verified using the following command: ```.\good_prism_properties.ps1```
+
+# README 
