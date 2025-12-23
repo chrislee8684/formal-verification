@@ -25,6 +25,7 @@ VAR
 DEFINE
   -- Checks if we can post a quote (used to fix quote cancellation issues)
   Can_post_quote := Market_data & !(Bid_state = CANCEL_SENT);
+  Max_limit := 1000;
 
 ASSIGN
   -- Initial state
@@ -113,3 +114,18 @@ LTLSPEC
 
 LTLSPEC
   G (Quote_posted -> (Bid < Ask));
+
+LTLSPEC
+  G (Inv <= Max_limit & Inv >= -Max_limit);
+
+CTLSPEC
+  AG (Pending_quote -> AF Quote_posted);
+
+CTLSPEC
+  AG (Pending_cancel -> AF (Bid_state = FILLED | Bid_state = CANCELED));
+
+CTLSPEC
+  AG (Quote_posted -> (Bid < Ask));
+
+CTLSPEC
+  AG (Inv <= Max_limit & Inv >= -Max_limit);
