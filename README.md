@@ -61,3 +61,7 @@ All of the liveness and safety properties can be verified using the following co
 
 ### Good PRISM Model
 The correct abstract model can be verified using the following command: ```.\good_prism_properties.ps1```
+
+PRISM does not provide counterexamples for probabilistic properties directly. The commands above will generate states (.sta) and transitions (.tra) in 
+the ./prism_results directory that the user will manually have to work through to find the counterexample if a property was not satisfied. Please note
+.tra files will only be generated if a property was violated.

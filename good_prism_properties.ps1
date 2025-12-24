@@ -1,3 +1,6 @@
+# Create output directories if they don't exist
+New-Item -ItemType Directory -Force -Path prism_results\good_model | Out-Null
+
 # Liveness Property 1
 prism good_prism_model.pm liveness.ltl -prop 1 `
   -exportadv prism_results\good_model\liveness_ce_prop1.tra `
