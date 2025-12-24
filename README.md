@@ -26,7 +26,7 @@ If you wish to run unbounded analysis using our nuXmv model checker, please run 
 1. nuXmv -int (starts nuxmv in interactive mode)
 2. read_model -i market-maker.smv (parses the model)
 3. go (builds the symbolic FSM)
-4. check_ltlspec (model checking)
+4. check_ltlspec and/or check_ctlspec (based on your needs)
 
 Keep in mind, unbounded model checking each specification for all execution lengths. Please be warned that our state space is quite large, and such an analysis will take significant processing time. Below is an image of our unbounded model checking completing 2 propeties validations over 18 hours.
 ![Screenshot of Static analysis report](examples/18-hrs.png)
@@ -48,10 +48,6 @@ If you wish to see an example of an output, please see the txt output files foun
 ### Viewing Counter-example Traces for nuXmv
 Should a specification fail, you can always print the counter-example trace using <code>show_traces</code>.
 
-### References
-https://nuxmv.fbk.eu/downloads/nuxmv-user-manual.pdf
-Used for nuXmv development. 
-
 ## Running Our PRISM Model Checker
 If this is your first time using PRISM, please go to https://www.prismmodelchecker.org/download.php and follow the download instructions that best fit your device.
 
@@ -62,4 +58,6 @@ All of the liveness and safety properties can be verified using the following co
 ### Good PRISM Model
 The correct abstract model can be verified using the following command: ```.\good_prism_properties.ps1```
 
-# README 
+### References
+https://nuxmv.fbk.eu/downloads/nuxmv-user-manual.pdf
+Used for nuXmv development. 
