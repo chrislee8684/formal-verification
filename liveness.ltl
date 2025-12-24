@@ -1,0 +1,9 @@
+// No quote obligation can remain forever
+P>=1 [ G (pending_bid_quote=>(true U !pending_bid_quote)) ]
+
+P>=1 [ G (pending_ask_quote=>(true U !pending_ask_quote)) ]
+
+// No cancel obligation can remain forever
+P>=1 [ G (pending_bid_cancel=>(true U !pending_bid_cancel)) ]
+
+P>=1 [ G (pending_ask_cancel=>(true U !pending_ask_cancel)) ]

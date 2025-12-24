@@ -1,0 +1,4 @@
+# PRISM generated artifacts
+prism_results/
+*.sta
+*.tra

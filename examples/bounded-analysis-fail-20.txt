@@ -1,0 +1,176 @@
+Autolycus@Arjuns-MacBook-Pro-2 formal-verification % nuXmv -int
+*** This is nuXmv 2.1.0 (compiled on Thu Nov 28 18:33:21 2024)
+*** Copyright (c) 2014-2024, Fondazione Bruno Kessler
+*** For more information on nuXmv see https://nuxmv.fbk.eu
+*** or email to <nuxmv@fbk.eu>.
+*** Please report bugs at Please report bugs to <nusmv-users@fbk.eu>
+*** (click on "Login Anonymously" to access)
+*** Alternatively write to <nuxmv@fbk.eu>.
+
+*** This version of nuXmv is linked to NuSMV 2.7.0.
+*** For more information on NuSMV see <http://nusmv.fbk.eu>
+*** or email to <nusmv-users@fbk.eu>.
+*** Copyright (C) 2010-2024, Fondazione Bruno Kessler
+
+*** This version of nuXmv is linked to the CUDD library version 2.4.1
+*** Copyright (c) 1995-2004, Regents of the University of Colorado
+
+*** This version of nuXmv is linked to the MiniSat SAT solver.
+*** See http://minisat.se/MiniSat.html
+*** Copyright (c) 2003-2006, Niklas Een, Niklas Sorensson
+*** Copyright (c) 2007-2010, Niklas Sorensson
+
+*** This version of nuXmv is linked to MathSAT
+*** Copyright (C) 2009-2019 by Fondazione Bruno Kessler
+*** Copyright (C) 2009-2019 by University of Trento and others
+*** See http://mathsat.fbk.eu
+
+nuXmv > read_model -i market-maker.smv
+nuXmv > go_bmc
+Warning: cannot assign value -1 to variable Bid
+Warning: cannot assign value 201 to variable Ask
+Warning: cannot assign value 10001 to variable Inv
+nuXmv > check_ltlspec_bmc -k 20
+-- no counterexample found with bound 0
+-- no counterexample found with bound 1
+-- no counterexample found with bound 2
+-- no counterexample found with bound 3
+-- no counterexample found with bound 4
+-- no counterexample found with bound 5
+-- no counterexample found with bound 6
+-- specification  G (Pending_quote ->  F Quote_posted)    is false
+-- as demonstrated by the following execution sequence
+Trace Description: BMC Counterexample
+Trace Type: Counterexample
+  -> State: 1.1 <-
+    Mid = 100
+    Bid = 99
+    Ask = 101
+    Inv = 0
+    Bid_state = NONE
+    Market_data = FALSE
+    Quote_posted = FALSE
+    Pending_quote = FALSE
+    Pending_cancel = FALSE
+    Will_post_quote = FALSE
+    InvPlusOne = 1
+    DecMid = 99
+    IncMid = 101
+  -> State: 1.2 <-
+    Mid = 99
+    Market_data = TRUE
+    Will_post_quote = TRUE
+    DecMid = 98
+    IncMid = 100
+  -> State: 1.3 <-
+    Mid = 100
+    Market_data = FALSE
+    Quote_posted = TRUE
+    Will_post_quote = FALSE
+    DecMid = 99
+    IncMid = 101
+  -> State: 1.4 <-
+    Bid_state = ACTIVE
+    Quote_posted = FALSE
+  -> State: 1.5 <-
+    Bid_state = CANCEL_SENT
+    Market_data = TRUE
+    Pending_cancel = TRUE
+  -> State: 1.6 <-
+    Bid_state = CANCELED
+    Market_data = FALSE
+    Pending_quote = TRUE
+    Pending_cancel = FALSE
+  -- Loop starts here
+  -> State: 1.7 <-
+    Bid_state = NONE
+  -> State: 1.8 <-
+-- no counterexample found with bound 0
+-- no counterexample found with bound 1
+-- no counterexample found with bound 2
+-- no counterexample found with bound 3
+-- no counterexample found with bound 4
+-- no counterexample found with bound 5
+-- no counterexample found with bound 6
+-- no counterexample found with bound 7
+-- no counterexample found with bound 8
+-- no counterexample found with bound 9
+-- no counterexample found with bound 10
+-- no counterexample found with bound 11
+-- no counterexample found with bound 12
+-- no counterexample found with bound 13
+-- no counterexample found with bound 14
+-- no counterexample found with bound 15
+-- no counterexample found with bound 16
+-- no counterexample found with bound 17
+-- no counterexample found with bound 18
+-- no counterexample found with bound 19
+-- no counterexample found with bound 20
+-- no counterexample found with bound 0
+-- no counterexample found with bound 1
+-- no counterexample found with bound 2
+-- no counterexample found with bound 3
+-- no counterexample found with bound 4
+-- no counterexample found with bound 5
+-- no counterexample found with bound 6
+-- no counterexample found with bound 7
+-- no counterexample found with bound 8
+-- no counterexample found with bound 9
+-- no counterexample found with bound 10
+-- no counterexample found with bound 11
+-- no counterexample found with bound 12
+-- no counterexample found with bound 13
+-- no counterexample found with bound 14
+-- no counterexample found with bound 15
+-- no counterexample found with bound 16
+-- no counterexample found with bound 17
+-- no counterexample found with bound 18
+-- no counterexample found with bound 19
+-- no counterexample found with bound 20
+nuXmv > read_model -i market-maker.smv
+A model appears to be already read from file: market-maker.smv.
+nuXmv > go_bmc
+nuXmv > check_ltlspec_bmc -k 20
+-- no counterexample found with bound 0
+-- no counterexample found with bound 1
+-- no counterexample found with bound 2
+-- no counterexample found with bound 3
+-- no counterexample found with bound 4
+-- no counterexample found with bound 5
+-- no counterexample found with bound 6
+-- no counterexample found with bound 7
+-- no counterexample found with bound 8
+-- no counterexample found with bound 9
+-- no counterexample found with bound 10
+-- no counterexample found with bound 11
+-- no counterexample found with bound 12
+-- no counterexample found with bound 13
+-- no counterexample found with bound 14
+-- no counterexample found with bound 15
+-- no counterexample found with bound 16
+-- no counterexample found with bound 17
+-- no counterexample found with bound 18
+-- no counterexample found with bound 19
+-- no counterexample found with bound 20
+-- no counterexample found with bound 0
+-- no counterexample found with bound 1
+-- no counterexample found with bound 2
+-- no counterexample found with bound 3
+-- no counterexample found with bound 4
+-- no counterexample found with bound 5
+-- no counterexample found with bound 6
+-- no counterexample found with bound 7
+-- no counterexample found with bound 8
+-- no counterexample found with bound 9
+-- no counterexample found with bound 10
+-- no counterexample found with bound 11
+-- no counterexample found with bound 12
+-- no counterexample found with bound 13
+-- no counterexample found with bound 14
+-- no counterexample found with bound 15
+-- no counterexample found with bound 16
+-- no counterexample found with bound 17
+-- no counterexample found with bound 18
+-- no counterexample found with bound 19
+-- no counterexample found with bound 20
+nuXmv > quit
