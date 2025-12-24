@@ -6,6 +6,9 @@ This directory holds many files:
 4. **liveness.ltl** and **safety.pctl** are definitions for our verifiable properties.
 5. **presentation.pdf** is a copy of the presentation slides we used for our final presentation.
 
+## Running the Source Code
+If you wish to run the source code you may compile it yourself. The source C++ file is called market-maker.cpp. However, we already include a compiled executable called market-maker.exe.
+
 ## Running Our Static Analysis Tool
 We used clang-tidy to perform static analysis on our codebase, see below for the most recent output.
 
@@ -42,14 +45,13 @@ Bounded model checking searches for counterexamples for up to a fixed bound X. T
 
 If you wish to see an example of an output, please see the txt output files found in our examples directory.
 
-### References
-https://nuxmv.fbk.eu/downloads/nuxmv-user-manual.pdf
-Used for nuXmv development. 
-
+## Example Files
 **bounded-analysis-fail-20.txt** holds the output file for an earlier run, where the liveness principle was violated, and the subsequent trace. This bugs is mentioned in our paper and was helpful in finding a logical issue in our model.
 **bounded-analysis-100.txt** holds the successful output for a bounded run of bound 20, 30 and 100 done subsequently.
+**unbounded-analysis-small-fail.txt** holds the unsuccessful output for a unbounded run of bound using a smaller test domain.
+**unbounded-analysis-success.txt** holds the successful output for a unbounded run for all ctl and ltl properties.
 
-### Viewing Counter-example Traces for nuXmv
+## Viewing Counter-example Traces for nuXmv
 Should a specification fail, you can always print the counter-example trace using <code>show_traces</code>.
 
 ## Running Our PRISM Model Checker
@@ -65,4 +67,8 @@ The correct abstract model can be verified using the following command: ```.\goo
 PRISM does not provide counterexamples for probabilistic properties directly. The commands above will generate states (.sta) and transitions (.tra) in 
 the ./prism_results directory that the user will manually have to work through to find the counterexample if a property was not satisfied. Please note
 .tra files will only be generated if a property was violated.
+
+### References
+https://nuxmv.fbk.eu/downloads/nuxmv-user-manual.pdf
+Used for nuXmv development. 
 
