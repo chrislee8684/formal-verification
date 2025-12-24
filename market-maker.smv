@@ -101,7 +101,7 @@ ASSIGN
 
   -- Inventory update on fill
   next(Inv) := case
-    (Bid_state = CANCEL_SENT) & (next(Bid_state) = FILLED) & (Inv < 10000) : Inv + 1;
+    (Bid_state = CANCEL_SENT) & (next(Bid_state) = FILLED) & (Inv < Max_limit) : Inv + 1;
     TRUE : Inv;
   esac;
 

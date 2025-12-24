@@ -26,7 +26,7 @@ If you wish to run unbounded analysis using our nuXmv model checker, please run 
 1. nuXmv -int (starts nuxmv in interactive mode)
 2. read_model -i market-maker.smv (parses the model)
 3. go (builds the symbolic FSM)
-4. check_ltlspec (model checking)
+4. check_ltlspec and/or check_ctlspec (based on your needs)
 
 Keep in mind, unbounded model checking each specification for all execution lengths. Please be warned that our state space is quite large, and such an analysis will take significant processing time. Below is an image of our unbounded model checking completing 2 propeties validations over 18 hours.
 ![Screenshot of Static analysis report](examples/18-hrs.png)
@@ -42,15 +42,15 @@ Bounded model checking searches for counterexamples for up to a fixed bound X. T
 
 If you wish to see an example of an output, please see the txt output files found in our examples directory.
 
+### References
+https://nuxmv.fbk.eu/downloads/nuxmv-user-manual.pdf
+Used for nuXmv development. 
+
 **bounded-analysis-fail-20.txt** holds the output file for an earlier run, where the liveness principle was violated, and the subsequent trace. This bugs is mentioned in our paper and was helpful in finding a logical issue in our model.
 **bounded-analysis-100.txt** holds the successful output for a bounded run of bound 20, 30 and 100 done subsequently.
 
 ### Viewing Counter-example Traces for nuXmv
 Should a specification fail, you can always print the counter-example trace using <code>show_traces</code>.
-
-### References
-https://nuxmv.fbk.eu/downloads/nuxmv-user-manual.pdf
-Used for nuXmv development. 
 
 ## Running Our PRISM Model Checker
 If this is your first time using PRISM, please go to https://www.prismmodelchecker.org/download.php and follow the download instructions that best fit your device.
@@ -65,3 +65,4 @@ The correct abstract model can be verified using the following command: ```.\goo
 PRISM does not provide counterexamples for probabilistic properties directly. The commands above will generate states (.sta) and transitions (.tra) in 
 the ./prism_results directory that the user will manually have to work through to find the counterexample if a property was not satisfied. Please note
 .tra files will only be generated if a property was violated.
+
